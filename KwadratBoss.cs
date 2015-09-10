@@ -19,7 +19,7 @@ namespace GlSharpGame
 
         public KwadratBoss(bool czy_losowy)
         {
-            Live = 16;
+            Live = 17;
             counter = 0;
 
             if (czy_losowy)
@@ -53,7 +53,7 @@ namespace GlSharpGame
                 temp = temp * 2.1f;
                 grubosci = temp;
                 x = rand.NextDouble();
-                kolor = new Wektor((float)x, (float)x, (float)x);
+                kolor = new Wektor((float)x, (float)x/2, (float)x);
                 waga = 2f;
             }
             else
