@@ -72,6 +72,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="MinPriorityQueue.cs" />
+    <Compile Include="Edge.cs" />
+    <Compile Include="MstPrim.cs" />
     <Compile Include="KwadratBoss.cs" />
     <Compile Include="KwadratMaterialnyPocisk.cs" />
     <Compile Include="kwardratMaterialny.cs" />
