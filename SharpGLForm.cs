@@ -20,6 +20,10 @@ namespace GlSharpGame
         private static readonly Random random = new Random();
         private static readonly object syncLock = new object();
         bool KeyA, KeyS, KeyD, KeyW, KeySpace;
+        MazeStruct MyMaze,MyMazeTwo;
+        List<int> MazeCellType;
+
+        List<int> tempMazeList;
          Wektor da,re;
             kwardratMaterialny cuboPlayer;
             int PlayerLive;
@@ -34,6 +38,7 @@ namespace GlSharpGame
             List<KwadratMaterialnyPocisk> listaPociskowPlayera;
             KwadratMaterialnyPocisk bulletOne;
             Rysownik rysow;
+            RysownikMaze rysowM;
             double YAxisCamera;
 
           //soundtouch
@@ -46,7 +51,12 @@ namespace GlSharpGame
 
         public SharpGLForm()
         {
-            
+            MazeCellType = new List<int>();
+            rysowM =new RysownikMaze();
+            MyMaze = rysowM.DrawMazeSkelethOfSize(25,true);
+            MyMazeTwo = rysowM.DrawMazeSkelethOfSize(5,false);
+            //
+            tempMazeList = rysowM.ConvertMazeStructToListOfTypes(MyMazeTwo);
              KeyA=false;
              KeyS = false; KeyD = false;
              KeyW=false; KeySpace=false;
@@ -180,6 +190,8 @@ namespace GlSharpGame
             //  Get the OpenGL object.
             OpenGL gl = openGLControl.OpenGL;
             rysow = new Rysownik(gl);
+            rysowM.SetUpGl(gl);
+         //   rysowM = new RysownikMaze(gl);
             //  Clear the color and depth buffer.
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
           //  (x > 0 ? x : (2*PI + x)) * 360 / (2*PI)
@@ -202,6 +214,10 @@ namespace GlSharpGame
             gl.Perspective(60.0f, 0, 0, 0);
             rysow.DrawLive(new Wektor(0.9f, -0.7f, 0), new Wektor(0.05f, 0.03f, 0f), PlayerLive);
             rysow.DrawLive(new Wektor(-0.9f, -0.7f, 0), new Wektor(0.05f, 0.04f, 0f), Boss.Live);
+
+
+
+
          //   gl.DepthMask(0);
         //    rysow.DrawCubo(0, 0, 0, 0.33f, 0.33f, 0.33f,0.0f,true,0.6f);
         //    gl.DepthMask(1);
@@ -244,7 +260,32 @@ namespace GlSharpGame
             rysow.DrawCubo(Boss.polozenie.X, Boss.polozenie.Y, Boss.polozenie.Z,
                 Boss.grubosci.X, Boss.grubosci.Y, Boss.grubosci.Z, 20,2);
 
-            rysow.draw_floor();
+           // rysow.draw_floor();
+         //   rysowM.FinalDrawAllMazeByGl(MyMaze, new Wektor(0, 0, 0),(float)cuboPlayer.angle/15);
+            rysowM.FinalDrawAllMazeByGl(MyMazeTwo, new Wektor(-2, 0, -3), 0.5f);
+
+          
+
+
+
+
+
+           rysowM.DrawMazyByListToSpeedUp(tempMazeList,new Wektor(0,0,0),0.22f);
+
+
+
+
+
+
+
+
+
+
+
+
+        //   Debug.Write(tempMazeList.Count.ToString() + " ");
+
+        //    rysowM.FinalDrawAllMazeByGl(MyMazeTwo, new Wektor(-5, 0, -5),1+(float)Math.Sin(rotation/10));
         
             cuboPlayer.angle = -1f * Angle_between_wektor_X_Z(cuboPlayer.polozenie, CursorWektor);
       
@@ -541,6 +582,9 @@ namespace GlSharpGame
 
             if ((char)e.KeyChar == 'p')
             {
+
+                //rysowM.DrawMaze();
+                //rysowM.DrawMazeOfSize(1009);
        //         Wektor POP;
        //         Wektor temp;
        //         POP = new Wektor(2, 2, 2);
@@ -569,6 +613,14 @@ namespace GlSharpGame
             }
             if ((char)e.KeyChar == 'l')
             {
+            //    MazeStruct TestMaze;
+            //    TestMaze = new MazeStruct(5);
+            //    TestMaze.setUpByEdge(new Edge(1, 2, 55));
+            //    TestMaze.setUpByEdge(new Edge(2, 1, 674));
+            //    TestMaze.setUpByEdge(new Edge(4, 5, 674));
+
+               // TestMaze.setUpByEdge(new)
+            //    TestMaze.viewByDebug();
                 Debug.WriteLine("PPPPPP");
               //  cuboPlayer.predkosc.Z = 0.1f;
               //  cuboPlayer.predkosc.X = 0.0f;

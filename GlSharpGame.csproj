@@ -72,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="MazeCell.cs" />
     <Compile Include="MinPriorityQueue.cs" />
     <Compile Include="Edge.cs" />
     <Compile Include="MstPrim.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="KwadratMaterialnyPocisk.cs" />
     <Compile Include="kwardratMaterialny.cs" />
     <Compile Include="Rysownik.cs" />
+    <Compile Include="RysownikMaze.cs" />
     <Compile Include="SharpGLForm.cs">
       <SubType>Form</SubType>
     </Compile>

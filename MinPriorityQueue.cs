@@ -84,7 +84,7 @@ namespace GlSharpGame
             _keys[index] = key;
             Swim(_qp[index]);
         }
-        /
+        
         public void IncreaseKey(int index, T key)
         {
             _keys[index] = key;

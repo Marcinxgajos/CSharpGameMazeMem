@@ -33,6 +33,11 @@ namespace GlSharpGame
         return _v;
     }
 
+    public int Dest()
+    {
+        return _w;
+    }
+
     public int Target(int vertex) {
         if      (vertex == _v) return _w;
         else if (vertex == _w) return _v;

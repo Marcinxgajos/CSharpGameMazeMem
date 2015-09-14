@@ -10,7 +10,7 @@ namespace GlSharpGame
         private Edge[] _edgeTo; //Keep track of the edges in our minimum spanning tree      
         private double[] _distTo; //Keep track of the weights to each edge in our minimum spanning tree   
         private Boolean[] _marked; //Keep track of which vertex we've looked
-        private MinPriorityQueue<Double> _pq;  //the [vertex number]|[weight] key value pairs in our minimum spanning tree
+        private IndexMinPriorityQueue<Double> _pq;  //the [vertex number]|[weight] key value pairs in our minimum spanning tree
 
         public PrimMST(EdgeWeightedGraph G)
         {
