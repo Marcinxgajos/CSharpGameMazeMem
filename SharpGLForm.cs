@@ -54,7 +54,7 @@ namespace GlSharpGame
             MazeCellType = new List<int>();
             rysowM =new RysownikMaze();
             MyMaze = rysowM.DrawMazeSkelethOfSize(25,true);
-            MyMazeTwo = rysowM.DrawMazeSkelethOfSize(5,false);
+            MyMazeTwo = rysowM.DrawMazeSkelethOfSize(16,false);
             //
             tempMazeList = rysowM.ConvertMazeStructToListOfTypes(MyMazeTwo);
              KeyA=false;
@@ -262,7 +262,7 @@ namespace GlSharpGame
 
            // rysow.draw_floor();
          //   rysowM.FinalDrawAllMazeByGl(MyMaze, new Wektor(0, 0, 0),(float)cuboPlayer.angle/15);
-            rysowM.FinalDrawAllMazeByGl(MyMazeTwo, new Wektor(-2, 0, -3), 0.5f);
+          //  rysowM.FinalDrawAllMazeByGl(MyMazeTwo, new Wektor(-2, 0, -3), 0.5f);
 
           
 
@@ -270,9 +270,10 @@ namespace GlSharpGame
 
 
 
-           rysowM.DrawMazyByListToSpeedUp(tempMazeList,new Wektor(0,0,0),0.22f);
-
-
+           rysowM.DrawMazyByListToSpeedUp(tempMazeList,new Wektor(2,0,0),0.02f);
+        //   rysowM.drawQuadFloor(new Wektor(1, 0, 1), 1f);
+          rysowM.DrawMazeFloor(tempMazeList,1.0f,new Wektor(0,0,0));  
+         //  rysowM.DrawMazyByListToSpeedUp(tempMazeList, cuboPlayer.polozenie, 0.22f);
 
 
 
