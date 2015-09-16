@@ -2,6 +2,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+using System.Drawing;
     using System.Diagnostics;
     using SharpGL;
 
@@ -9,15 +10,26 @@
     {
         class RysownikMaze
         {
+            public List<Wektor> ListaPointowDoKolizji;
+            public List<float> ListaXDoKolizji;
+            public List<float> ListaZDoKolizji;
              public OpenGL gl;
+            public bool Is_list_fill;
             public EdgeWeightedGraph Maze;
             public RysownikMaze(OpenGL gll)
             {
                 gl = gll;
+                Is_list_fill=false;
+                ListaPointowDoKolizji = new List<Wektor>();
+                ListaXDoKolizji = new List<float>();
+                ListaZDoKolizji = new List<float>();
             }
             public RysownikMaze()
             {
-
+                ListaXDoKolizji = new List<float>();
+                ListaZDoKolizji = new List<float>();
+                ListaPointowDoKolizji = new List<Wektor>();
+                Is_list_fill = false;
             }
 
 
@@ -96,7 +108,7 @@
                        desto = s.Dest();
                        writelienString = sorc.ToString() + "  " + desto.ToString();
 
-                       Debug.WriteLine(writelienString);
+                  //     Debug.WriteLine(writelienString);
                   
 
 
@@ -452,6 +464,7 @@
                         case 11111:
                             drawVertex(Cursor);
                             gl.Vertex(Cursor.X, Center.Y ,Cursor.Z + weight);
+                           // ListaPointowDoKolizji.Add(new Point(Cursor.X, Cursor.Z + weight));
                             drawVertex(Cursor);
                             gl.Vertex(Cursor.X + weight, Center.Y, Cursor.Z);
                             drawVertex(Cursor);
@@ -598,19 +611,24 @@
         {
            // Wektor Cursor;
             gl.PushMatrix();
-
+            if (!Is_list_fill)
+            {
+                ListaPointowDoKolizji.Add(center);
+               // ListaXDoKolizji.Add(center.X);
+              //  ListaZDoKolizji.Add(center.Z);
+            }
             //     gl.DepthMask(0);
             // gl.r
             gl.Begin(OpenGL.GL_LINES);
             float halfX;
             float halfY;
             float halfZ;
-            halfX = weight/6;
-            halfY = weight/6;
-            halfZ = weight/6;
+            halfX = weight/5;
+            halfY = weight/5;
+            halfZ = weight/5;
             Wektor kursor;
             kursor = new Wektor(center.X-weight, center.Y-0.5f, center.Z-weight);
-            for (int i = 0; i < 12; i++)
+            for (int i = 0; i < 10; i++)
             {
 
                 if (i % 2 == 0)
@@ -632,7 +650,7 @@
             kursor = new Wektor(center.X-weight, center.Y-0.5f, center.Z-weight);
 
 
-            for (int i = 0; i < 12; i++)
+            for (int i = 0; i < 10; i++)
             {
 
                 if (i % 2 == 0)
@@ -766,8 +784,10 @@
 
                 }
                  
-                drawQuadFloor(new Wektor(Cursor.X, Cursor.Y, Cursor.Z + weight * 2 ), weight);
-                drawQuadFloor(new Wektor(Cursor.X + weight * 2, Cursor.Y, Cursor.Z + weight * 2), weight);
+                //drawQuadFloor(new Wektor(Cursor.X, Cursor.Y, Cursor.Z + weight * 2 ), weight);
+                //drawQuadFloor(new Wektor(Cursor.X + weight * 2, Cursor.Y, Cursor.Z + weight * 2), weight);
+                Is_list_fill = true;
+                Debug.WriteLine(ListaPointowDoKolizji.Count);
 
             }
         }

@@ -20,9 +20,12 @@ namespace GlSharpGame
         private static readonly Random random = new Random();
         private static readonly object syncLock = new object();
         bool KeyA, KeyS, KeyD, KeyW, KeySpace;
+        SprawdzaczKolizji Sprawdzacz;
         MazeStruct MyMaze,MyMazeTwo;
         List<int> MazeCellType;
-
+        List<Wektor> ListaKolizji;
+        List<float> ListaKolizjiX;
+        List<float> ListaKolizjiZ;
         List<int> tempMazeList;
          Wektor da,re;
             kwardratMaterialny cuboPlayer;
@@ -51,6 +54,9 @@ namespace GlSharpGame
 
         public SharpGLForm()
         {
+            ListaKolizji = new List<Wektor>();
+            ListaKolizjiX = new List<float>();
+            ListaKolizjiZ = new List<float>();
             MazeCellType = new List<int>();
             rysowM =new RysownikMaze();
             MyMaze = rysowM.DrawMazeSkelethOfSize(25,true);
@@ -273,6 +279,18 @@ namespace GlSharpGame
            rysowM.DrawMazyByListToSpeedUp(tempMazeList,new Wektor(2,0,0),0.02f);
         //   rysowM.drawQuadFloor(new Wektor(1, 0, 1), 1f);
           rysowM.DrawMazeFloor(tempMazeList,1.0f,new Wektor(0,0,0));  
+            if(ListaKolizji==null  && rysowM.ListaPointowDoKolizji ==null)
+            {
+                Debug.Write("wwrsdsfsafasfa");
+                ListaKolizji = rysowM.ListaPointowDoKolizji;
+                ListaKolizjiX = rysowM.ListaXDoKolizji;
+                ListaKolizjiZ = rysowM.ListaZDoKolizji;
+            }
+
+          //  Debug.WriteLine(ListaKolizji.Count + " <out  ");
+
+
+
          //  rysowM.DrawMazyByListToSpeedUp(tempMazeList, cuboPlayer.polozenie, 0.22f);
 
 
@@ -404,9 +422,17 @@ namespace GlSharpGame
 
       
             cuboPlayer.wycisz_predkosc_only_XZ_o(0.01f);
-            cuboPlayer.krok_naprzod();
+         //   if(Sprawdzacz.CzyNieKoliduje(ListaKolizji,1.0f,cuboPlayer.polozenie + cuboPlayer.predkosc)){
 
+            if (ListaKolizji != null)
+            {
 
+               if(Sprawdzacz.CzyJestW(ListaKolizji,1.0f,cuboPlayer.polozenie+cuboPlayer.predkosc))
+               {
+                    cuboPlayer.krok_naprzod();
+               }
+            }
+            //esle
 
 
 
