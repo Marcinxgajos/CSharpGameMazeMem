@@ -19,7 +19,7 @@ namespace GlSharpGame
 
         public KwadratBoss(bool czy_losowy)
         {
-            Live = 16;
+            Live = 28;
             counter = 0;
 
             if (czy_losowy)

@@ -21,6 +21,7 @@ namespace GlSharpGame
         private static readonly object syncLock = new object();
         bool KeyA, KeyS, KeyD, KeyW, KeySpace;
         SprawdzaczKolizji Sprawdzacz;
+        TrapChecker StraightTrap;
         MazeStruct MyMaze,MyMazeTwo;
         List<int> MazeCellType;
         List<Wektor> ListaKolizji;
@@ -36,6 +37,7 @@ namespace GlSharpGame
         Wektor CursorWektor;
         Wektor CursorWektorAngled;
         Wektor WektorZero;
+        int[][] MazeCellsIntTab;
             KwadratBoss Boss;
             List<KwadratMaterialnyPocisk> listaPociskow;
             List<KwadratMaterialnyPocisk> listaPociskowPlayera;
@@ -43,7 +45,8 @@ namespace GlSharpGame
             Rysownik rysow;
             RysownikMaze rysowM;
             double YAxisCamera;
-
+            bool first_time;
+            int Basic_Size;
           //soundtouch
         //
            
@@ -54,16 +57,35 @@ namespace GlSharpGame
 
         public SharpGLForm()
         {
-            ListaKolizji = new List<Wektor>();
+            Basic_Size = 17;
+            MazeCellsIntTab= new int[Basic_Size][];
+            for (int j = 0; j < Basic_Size;j++ )
+            {
+                MazeCellsIntTab[j] = new int[Basic_Size];
+            }
+
+                ListaKolizji = new List<Wektor>();
             ListaKolizjiX = new List<float>();
             ListaKolizjiZ = new List<float>();
             MazeCellType = new List<int>();
             rysowM =new RysownikMaze();
+            StraightTrap = new TrapChecker();
+          //  Sprawdzacz = new SprawdzaczKolizji();
             MyMaze = rysowM.DrawMazeSkelethOfSize(25,true);
-            MyMazeTwo = rysowM.DrawMazeSkelethOfSize(16,false);
-            //
+            MyMazeTwo = rysowM.DrawMazeSkelethOfSize(Basic_Size,false);
+            first_time = false;
             tempMazeList = rysowM.ConvertMazeStructToListOfTypes(MyMazeTwo);
-             KeyA=false;
+     
+               for(int i=0;i<Basic_Size*Basic_Size;i++)
+               {
+                   MazeCellsIntTab[i / Basic_Size][i % Basic_Size] = tempMazeList.ElementAt(i);
+               }
+
+
+
+
+
+                KeyA = false;
              KeyS = false; KeyD = false;
              KeyW=false; KeySpace=false;
             WektorZero = new Wektor(0, 0, 0);
@@ -72,6 +94,7 @@ namespace GlSharpGame
             YAxisCamera = 5;
             CursorWektor = new Wektor(0, 0, 0);
             CursorWektorAngled = new Wektor(0, 0, 0);
+            Debug.WriteLine("j");
             Boss = new KwadratBoss(true);
            // new List<int>();
             listaPociskow = new List<KwadratMaterialnyPocisk>();
@@ -197,6 +220,20 @@ namespace GlSharpGame
             OpenGL gl = openGLControl.OpenGL;
             rysow = new Rysownik(gl);
             rysowM.SetUpGl(gl);
+            
+            if (!first_time)
+            {
+                rysowM.DrawMazeFloor(tempMazeList, 1.0f, new Wektor(0, 0, 0));
+                if (rysowM.ListaPointowDoKolizji != null)
+                {
+                    //   Debug.Write("wwrsdsfsafasfa");
+                    ListaKolizji = rysowM.ListaPointowDoKolizji;
+                    //   ListaKolizjiX = rysowM.ListaXDoKolizji;
+                    //  ListaKolizjiZ = rysowM.ListaZDoKolizji;
+                }
+                first_time = true;
+            }
+            Sprawdzacz = new SprawdzaczKolizji(rysow);
          //   rysowM = new RysownikMaze(gl);
             //  Clear the color and depth buffer.
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
@@ -245,26 +282,26 @@ namespace GlSharpGame
             // =new Wektor(1.0, 1.0, 1.0);
             //Wektor re(1.0,1.0,1.0);
 
-            for (int i = 0; i < listaPociskow.Count; i++) // Loop with for.
+     /*       for (int i = 0; i < listaPociskow.Count; i++) // Loop with for.
      {
                 
                  rysow.DrawCubo(listaPociskow[i].polozenie.X, listaPociskow[i].polozenie.Y, listaPociskow[i].polozenie.Z,
                        listaPociskow[i].grubosci.X, listaPociskow[i].grubosci.Y, listaPociskow[i].grubosci.Z, (float)listaPociskow[i].angle + rotation, true,1.0f);
                 
-           }
+           } */
           //  list
-            for (int i = 0; i < listaPociskowPlayera.Count; i++) // Loop with for.
+        /*    for (int i = 0; i < listaPociskowPlayera.Count; i++) // Loop with for.
             {
 
                 rysow.DrawCubo(listaPociskowPlayera[i].polozenie.X, listaPociskowPlayera[i].polozenie.Y, listaPociskowPlayera[i].polozenie.Z,
                       listaPociskowPlayera[i].grubosci.X, listaPociskowPlayera[i].grubosci.Y, listaPociskowPlayera[i].grubosci.Z, (float)listaPociskowPlayera[i].angle + rotation, true, 1.0f);
 
             }
+            */
 
 
-
-            rysow.DrawCubo(Boss.polozenie.X, Boss.polozenie.Y, Boss.polozenie.Z,
-                Boss.grubosci.X, Boss.grubosci.Y, Boss.grubosci.Z, 20,2);
+         //   rysow.DrawCubo(Boss.polozenie.X, Boss.polozenie.Y, Boss.polozenie.Z,
+          //      Boss.grubosci.X, Boss.grubosci.Y, Boss.grubosci.Z, 20,2);
 
            // rysow.draw_floor();
          //   rysowM.FinalDrawAllMazeByGl(MyMaze, new Wektor(0, 0, 0),(float)cuboPlayer.angle/15);
@@ -276,22 +313,46 @@ namespace GlSharpGame
 
 
 
-           rysowM.DrawMazyByListToSpeedUp(tempMazeList,new Wektor(2,0,0),0.02f);
-        //   rysowM.drawQuadFloor(new Wektor(1, 0, 1), 1f);
-          rysowM.DrawMazeFloor(tempMazeList,1.0f,new Wektor(0,0,0));  
-            if(ListaKolizji==null  && rysowM.ListaPointowDoKolizji ==null)
-            {
-                Debug.Write("wwrsdsfsafasfa");
-                ListaKolizji = rysowM.ListaPointowDoKolizji;
-                ListaKolizjiX = rysowM.ListaXDoKolizji;
-                ListaKolizjiZ = rysowM.ListaZDoKolizji;
-            }
+      //     rysowM.DrawMazyByListToSpeedUp(tempMazeList,new Wektor(2,0,0),0.02f);
+       //    rysowM.drawQuadFloor(new Wektor(1, 0, 1), 1f);
+       
 
+     //      rysowM.drawQuadFloor(new Wektor(0,0,0),1.0f);
+    
+           
+               rysowM.DrawMazeFloor(tempMazeList, 1.0f, new Wektor(0, 0, 0));
+               int Xo;
+               int Yo;
+               Coord tempCo = StraightTrap.in_what_coord(cuboPlayer.polozenie.X, cuboPlayer.polozenie.Z, 1.0f);
+
+               Debug.Write(tempCo.x);
+            Debug.Write("   y>");
+            Debug.WriteLine(tempCo.y);
+           if( StraightTrap.is_three_cell_far(MazeCellsIntTab, tempCo.x, tempCo.y))
+           {
+               Debug.WriteLine("buuummm");
+           }
+      //      + "  y>" + cuboPlayer.polozenie.Z-1.0f);
+      //      gl.EnableClientState(OpenGL.GL_VERTEX_ARRAY);
+      
+       //     gl.VertexPointer(0,3,rysowM.ArrayVertex);
+          
+          //  gl.VertexPointer()
+//glVertexPointer(3, GL_FLOAT, 0, vertices);
+
+// draw a cube
+       //     gl.DrawArrays(OpenGL.GL_LINES,0,rysowM.count/2);
+//glDrawArrays(GL_TRIANGLES, 0, 36);
+
+// deactivate vertex arrays after drawing
+//glDisableClientState(GL_VERTEX_ARRAY);
+    //        gl.EnableClientState(OpenGL.GL_VERTEX_ARRAY);
+  //          gl.DrawArrays()
           //  Debug.WriteLine(ListaKolizji.Count + " <out  ");
 
 
 
-         //  rysowM.DrawMazyByListToSpeedUp(tempMazeList, cuboPlayer.polozenie, 0.22f);
+       //mapka//    rysowM.DrawMazyByListToSpeedUp(tempMazeList, cuboPlayer.polozenie, 0.22f);
 
 
 
@@ -305,27 +366,28 @@ namespace GlSharpGame
         //   Debug.Write(tempMazeList.Count.ToString() + " ");
 
         //    rysowM.FinalDrawAllMazeByGl(MyMazeTwo, new Wektor(-5, 0, -5),1+(float)Math.Sin(rotation/10));
-        
-            cuboPlayer.angle = -1f * Angle_between_wektor_X_Z(cuboPlayer.polozenie, CursorWektor);
-      
-           rysow.DrawPlayer(cuboPlayer.polozenie, cuboPlayer.grubosci, cuboPlayer.angle);
-        
+       
           gl.Enable(SharpGL.OpenGL.GL_BLEND);
             gl.BlendFunc(SharpGL.OpenGL.GL_SRC_ALPHA,SharpGL.OpenGL.GL_ONE_MINUS_SRC_ALPHA);
 
 //           glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            CursorWektor += cuboPlayer.polozenie;
             rysow.DrawCubo_with_alpha(CursorWektor.X, CursorWektor.Y, CursorWektor.Z,
                 cuboPlayer.grubosci.X,
                 cuboPlayer.grubosci.Y, cuboPlayer.grubosci.Z, rotation * 2,0.3f);
+            CursorWektorAngled += cuboPlayer.polozenie;
+           // rysow.DrawCubo_with_alpha(CursorWektorAngled.X, CursorWektorAngled.Y, CursorWektorAngled.Z,
+       ////         cuboPlayer.grubosci.X,
+      //          cuboPlayer.grubosci.Y * 3, cuboPlayer.grubosci.Z, (float)(1.5 * -1) * rotation, 0.3f);
 
-            rysow.DrawCubo_with_alpha(CursorWektorAngled.X, CursorWektorAngled.Y, CursorWektorAngled.Z,
-                cuboPlayer.grubosci.X,
-                cuboPlayer.grubosci.Y * 3, cuboPlayer.grubosci.Z, (float)(1.5 * -1) * rotation, 0.3f);
 
+            cuboPlayer.angle = -1f * Angle_between_wektor_X_Z(cuboPlayer.polozenie, CursorWektor);
 
-            rysow.DrawCubo_with_alpha(CursorWektorAngled.X,CursorWektorAngled.Y,CursorWektorAngled.Z,
-                cuboPlayer.grubosci.X,
-                cuboPlayer.grubosci.Y*3, cuboPlayer.grubosci.Z,  (float)(1.5 * -1) * rotation ,0.3f);
+            rysow.DrawPlayer(cuboPlayer.polozenie, cuboPlayer.grubosci, cuboPlayer.angle);
+        
+          //  rysow.DrawCubo_with_alpha(CursorWektorAngled.X,CursorWektorAngled.Y,CursorWektorAngled.Z,
+          //      cuboPlayer.grubosci.X,
+        //        cuboPlayer.grubosci.Y*3, cuboPlayer.grubosci.Z,  (float)(1.5 * -1) * rotation ,0.3f);
 
 
             Wektor AngleZeto;
@@ -389,12 +451,12 @@ namespace GlSharpGame
 
                         cuboPlayer.predkosc = temp;
                         //      cuboPlayer.predkosc.Z += 0.21f;
-                        Debug.WriteLine(RotateWektorOnZero(temp, 45).X + "   " + RotateWektorOnZero(temp, 45).Z);
+                //        Debug.WriteLine(RotateWektorOnZero(temp, 45).X + "   " + RotateWektorOnZero(temp, 45).Z);
                         break;
                     case 2:
                         cuboPlayer.predkosc = RotateWektorOnZero(temp, 45);
                         //cuboPlayer.predkosc.Z += RotateWektorOnZero(temp, 90).Z;
-                        Debug.WriteLine(RotateWektorOnZero(temp, 90).X + "   " + RotateWektorOnZero(temp, 90).Z);
+                    //    Debug.WriteLine(RotateWektorOnZero(temp, 90).X + "   " + RotateWektorOnZero(temp, 90).Z);
                         break;
 
                     case 3:
@@ -426,12 +488,14 @@ namespace GlSharpGame
 
             if (ListaKolizji != null)
             {
-
-               if(Sprawdzacz.CzyJestW(ListaKolizji,1.0f,cuboPlayer.polozenie+cuboPlayer.predkosc))
+          //      Debug.Write(ListaKolizji.Count);
+             //   Debug.Write("nie pusty");
+               if(Sprawdzacz.CzyNieKoliduje(ListaKolizji,0.5f,cuboPlayer.polozenie+cuboPlayer.predkosc))
                {
                     cuboPlayer.krok_naprzod();
                }
             }
+       
             //esle
 
 
@@ -480,7 +544,7 @@ namespace GlSharpGame
                 if(czy_nachodza(listaPociskowPlayera[i].polozenie,Boss.polozenie,Boss.grubosci.X))
                 {
                     Boss.Live--;
-                    Debug.WriteLine("nachodza");
+                  //  Debug.WriteLine("nachodza");
                 }
 
                 if (listaPociskowPlayera[i].vitality < 3)
@@ -495,9 +559,34 @@ namespace GlSharpGame
 
             }
 
-
-            if(Boss.counter%250  == 0)
+            if (cuboPlayer.polozenie.X < 2.0f * 16 * 3 && -5.5f + (2.0f * 16 * 3) < cuboPlayer.polozenie.Z && -5.5f + (2.0f * 16 * 3) < cuboPlayer.polozenie.X                )
             {
+                ListaKolizji = new List<Wektor>();
+                ListaKolizjiX = new List<float>();
+                ListaKolizjiZ = new List<float>();
+                MazeCellType = new List<int>();
+                rysowM = new RysownikMaze();
+             //   Sprawdzacz = new SprawdzaczKolizji();
+                MyMaze = rysowM.DrawMazeSkelethOfSize(25, true);
+                MyMazeTwo = rysowM.DrawMazeSkelethOfSize(16, false);
+                //
+                tempMazeList = rysowM.ConvertMazeStructToListOfTypes(MyMazeTwo);
+            
+                cuboPlayer.polozenie = new Wektor(0, 0, 0);
+            }
+
+            if( cuboPlayer.polozenie.X > 2.0f * 16)
+            {
+
+            }
+
+            if(Boss.counter%100  == 0)
+            {
+                Boss.Live--;
+                if(Boss.Live==0)
+                {
+                    cuboPlayer.polozenie = new Wektor(0, 0, 0);
+                }
                 listaPociskow = new List<KwadratMaterialnyPocisk>();
                 for (int i = 0; i < 13; i++)
                 {
@@ -549,6 +638,7 @@ namespace GlSharpGame
 
             //  Get the OpenGL object.
             OpenGL gl = openGLControl.OpenGL;
+      //      Sprawdzacz.rysow.gl = gl;
             //DrawCubo(0, 0, 0, 1, 1, 1);
           // gl.LookAt( -5, YAxisCamera, -5, 0, 0, 0, 0, 1, 0);
             //  Set the clear color.
@@ -640,6 +730,7 @@ namespace GlSharpGame
             }
             if ((char)e.KeyChar == 'l')
             {
+            
             //    MazeStruct TestMaze;
             //    TestMaze = new MazeStruct(5);
             //    TestMaze.setUpByEdge(new Edge(1, 2, 55));
@@ -648,7 +739,7 @@ namespace GlSharpGame
 
                // TestMaze.setUpByEdge(new)
             //    TestMaze.viewByDebug();
-                Debug.WriteLine("PPPPPP");
+          //      Debug.WriteLine("PPPPPP");
               //  cuboPlayer.predkosc.Z = 0.1f;
               //  cuboPlayer.predkosc.X = 0.0f;
              //   cuboPlayer = new kwardratMaterialny(new Wektor(0.0f, 0.0f, 0.0f), new Wektor(0.0f, 0.0f, 0.0f), new Wektor(0.4f, 0.4f, 0.4f), new Wektor(0.2f, 0.2f, 0.2f), 45);
@@ -662,12 +753,12 @@ namespace GlSharpGame
             if (e.KeyChar == (char)Keys.E)
             {
                 e.Handled = true;
-                Debug.WriteLine("WWWWEEEEEEEW");
+         //       Debug.WriteLine("WWWWEEEEEEEW");
             }
             if (e.KeyChar == (char)Keys.Return)
             {
                 e.Handled = true;
-                Debug.WriteLine("returndsdas presed");
+           //     Debug.WriteLine("returndsdas presed");
             }
            
         }

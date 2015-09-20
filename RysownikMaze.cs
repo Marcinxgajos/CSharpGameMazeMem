@@ -10,25 +10,34 @@ using System.Drawing;
     {
         class RysownikMaze
         {
+            public float[] ArrayVertex;
             public List<Wektor> ListaPointowDoKolizji;
-            public List<float> ListaXDoKolizji;
-            public List<float> ListaZDoKolizji;
+         //   public List<float> ListaXDoKolizji;
+        //    public List<float> ListaZDoKolizji;
+            public List<Wektor> listaWectorow;
              public OpenGL gl;
+            public int count;
             public bool Is_list_fill;
             public EdgeWeightedGraph Maze;
             public RysownikMaze(OpenGL gll)
             {
+                ArrayVertex =new float[30000];
+                count = 0;
                 gl = gll;
                 Is_list_fill=false;
                 ListaPointowDoKolizji = new List<Wektor>();
-                ListaXDoKolizji = new List<float>();
-                ListaZDoKolizji = new List<float>();
+                listaWectorow = new List<Wektor>();
+             //   ListaXDoKolizji = new List<float>();
+              //  ListaZDoKolizji = new List<float>();
             }
             public RysownikMaze()
             {
-                ListaXDoKolizji = new List<float>();
-                ListaZDoKolizji = new List<float>();
+                count = 0;
+                 ArrayVertex =new float[30000];
+              //  ListaXDoKolizji = new List<float>();
+               // ListaZDoKolizji = new List<float>();
                 ListaPointowDoKolizji = new List<Wektor>();
+                listaWectorow = new List<Wektor>();
                 Is_list_fill = false;
             }
 
@@ -614,6 +623,11 @@ using System.Drawing;
             if (!Is_list_fill)
             {
                 ListaPointowDoKolizji.Add(center);
+                listaWectorow.Add(center);
+                ListaPointowDoKolizji.Add(new Wektor(center.X + weight / 2,center.Y,center.Z));
+                ListaPointowDoKolizji.Add(new Wektor(center.X - weight / 2, center.Y, center.Z));
+                ListaPointowDoKolizji.Add(new Wektor(center.X, center.Y, center.Z + weight / 2));
+                ListaPointowDoKolizji.Add(new Wektor(center.X, center.Y, center.Z - weight / 2));
                // ListaXDoKolizji.Add(center.X);
               //  ListaZDoKolizji.Add(center.Z);
             }
@@ -623,6 +637,8 @@ using System.Drawing;
             float halfX;
             float halfY;
             float halfZ;
+              //  int count;
+                count=0;
             halfX = weight/5;
             halfY = weight/5;
             halfZ = weight/5;
@@ -640,6 +656,8 @@ using System.Drawing;
                     gl.Color(0.4f, 0.4f, 0.4f, 0.5f);
                 }
                 gl.Vertex(kursor.X, kursor.Y, kursor.Z);
+          //      ArrayVertex[0]= kursor.X;
+
                 gl.Vertex(kursor.X, kursor.Y, kursor.Z + weight*2);
                 kursor.X += halfX;
             }
@@ -673,6 +691,175 @@ using System.Drawing;
             gl.PopMatrix();
         }
 
+            public void drawQuadFloor_withoutPut(Wektor center, float weight)
+            {
+                // Wektor Cursor;
+                gl.PushMatrix();
+              
+
+                gl.Begin(OpenGL.GL_LINES);
+                float halfX;
+                float halfY;
+                float halfZ;
+                halfX = weight / 5;
+                halfY = weight / 5;
+                halfZ = weight / 5;
+                Wektor kursor;
+                kursor = new Wektor(center.X - weight, center.Y - 0.5f, center.Z - weight);
+                for (int i = 0; i < 10; i++)
+                {
+
+                    if (i % 2 == 0)
+                    {
+                        gl.Color(0.6f, 0.6f, 0.6f, 0.5f);
+                    }
+                    else
+                    {
+                        gl.Color(0.4f, 0.4f, 0.4f, 0.5f);
+                    }
+                    gl.Vertex(kursor.X, kursor.Y, kursor.Z);
+               //     ArrayVertex[count++] = kursor.X;
+                 //   ArrayVertex[count++] = kursor.Y;
+                 //   ArrayVertex[count++] = kursor.Z;
+                    gl.Vertex(kursor.X, kursor.Y, kursor.Z + weight * 2);
+                //    ArrayVertex[count++] = kursor.X;
+                 //   ArrayVertex[count++] = kursor.Y;
+                //    ArrayVertex[count++] = kursor.Z + weight * 2;
+                    kursor.X += halfX;
+                }
+
+                gl.Vertex(kursor.X, kursor.Y, kursor.Z);
+              //  ArrayVertex[count++] = kursor.X;
+               // ArrayVertex[count++] = kursor.Y;
+               // ArrayVertex[count++] = kursor.Z;
+                gl.Vertex(kursor.X, kursor.Y, kursor.Z + weight * 2);
+               // ArrayVertex[count++] = kursor.X;
+               // ArrayVertex[count++] = kursor.Y;
+               // ArrayVertex[count++] = kursor.Z + weight * 2;
+
+                kursor = new Wektor(center.X - weight, center.Y - 0.5f, center.Z - weight);
+
+
+                for (int i = 0; i < 10; i++)
+                {
+
+                    if (i % 2 == 0)
+                    {
+                        gl.Color(0.6f, 0.6f, 0.6f, 0.5f);
+                    }
+                    else
+                    {
+                        gl.Color(0.4f, 0.4f, 0.4f, 0.5f);
+                    }
+                    gl.Vertex(kursor.X, kursor.Y, kursor.Z);
+                  //  ArrayVertex[count++] = kursor.X;
+                  //  ArrayVertex[count++] = kursor.Y;
+                 //   ArrayVertex[count++] = kursor.Z;
+                    gl.Vertex(kursor.X + weight * 2, kursor.Y, kursor.Z);
+               //     ArrayVertex[count++] = kursor.X + weight * 2;
+               //     ArrayVertex[count++] = kursor.Y;
+                //    ArrayVertex[count++] = kursor.Z;
+                    kursor.Z += halfZ;
+                }
+
+                gl.Vertex(kursor.X, kursor.Y, kursor.Z);
+            //    ArrayVertex[count++] = kursor.X;
+            //    ArrayVertex[count++] = kursor.Y;
+            //    ArrayVertex[count++] = kursor.Z;
+                gl.Vertex(kursor.X + weight * 2, kursor.Y, kursor.Z);
+            //    ArrayVertex[count++] = kursor.X + weight * 2;
+            //    ArrayVertex[count++] = kursor.Y;
+            //    ArrayVertex[count++] = kursor.Z;
+                //        gl.DepthMask(0);
+                gl.End();
+                gl.PopMatrix();
+            }
+
+            public void drawQuadFloorL(Wektor center, float weight)
+            {
+                // Wektor Cursor;
+                gl.PushMatrix();
+
+
+                gl.Begin(OpenGL.GL_LINES);
+                float halfX;
+                float halfY;
+                float halfZ;
+                halfX = weight / 5;
+                halfY = weight / 5;
+                halfZ = weight / 5;
+                Wektor kursor;
+                kursor = new Wektor(center.X - weight, center.Y - 0.5f, center.Z - weight);
+                for (int i = 0; i < 10; i++)
+                {
+
+                    if (i % 2 == 0)
+                    {
+                        gl.Color(0.6f, 0.6f, 0.6f, 0.5f);
+                    }
+                    else
+                    {
+                        gl.Color(0.4f, 0.4f, 0.4f, 0.5f);
+                    }
+                 //   gl.Vertex(kursor.X, kursor.Y, kursor.Z);
+                    ArrayVertex[count++] = kursor.X;
+                    ArrayVertex[count++] = kursor.Y;
+                    ArrayVertex[count++] = kursor.Z;
+                 //   gl.Vertex(kursor.X, kursor.Y, kursor.Z + weight * 2);
+                    ArrayVertex[count++] = kursor.X;
+                    ArrayVertex[count++] = kursor.Y;
+                    ArrayVertex[count++] = kursor.Z + weight * 2;
+                    kursor.X += halfX;
+                }
+
+             //   gl.Vertex(kursor.X, kursor.Y, kursor.Z);
+                ArrayVertex[count++] = kursor.X;
+                ArrayVertex[count++] = kursor.Y;
+                ArrayVertex[count++] = kursor.Z;
+             //   gl.Vertex(kursor.X, kursor.Y, kursor.Z + weight * 2);
+                ArrayVertex[count++] = kursor.X;
+                ArrayVertex[count++] = kursor.Y;
+                ArrayVertex[count++] = kursor.Z + weight * 2;
+
+                kursor = new Wektor(center.X - weight, center.Y - 0.5f, center.Z - weight);
+
+
+                for (int i = 0; i < 10; i++)
+                {
+
+                    if (i % 2 == 0)
+                    {
+                        gl.Color(0.6f, 0.6f, 0.6f, 0.5f);
+                    }
+                    else
+                    {
+                        gl.Color(0.4f, 0.4f, 0.4f, 0.5f);
+                    }
+              //      gl.Vertex(kursor.X, kursor.Y, kursor.Z);
+                    ArrayVertex[count++] = kursor.X;
+                    ArrayVertex[count++] = kursor.Y;
+                    ArrayVertex[count++] = kursor.Z;
+                 //   gl.Vertex(kursor.X + weight * 2, kursor.Y, kursor.Z);
+                    ArrayVertex[count++] = kursor.X + weight * 2;
+                    ArrayVertex[count++] = kursor.Y;
+                    ArrayVertex[count++] = kursor.Z;
+                    kursor.Z += halfZ;
+                }
+
+            //    gl.Vertex(kursor.X, kursor.Y, kursor.Z);
+                ArrayVertex[count++] = kursor.X;
+                ArrayVertex[count++] = kursor.Y;
+                ArrayVertex[count++] = kursor.Z;
+            //    gl.Vertex(kursor.X + weight * 2, kursor.Y, kursor.Z);
+                ArrayVertex[count++] = kursor.X + weight * 2;
+                ArrayVertex[count++] = kursor.Y;
+                ArrayVertex[count++] = kursor.Z;
+                //        gl.DepthMask(0);
+                gl.End();
+                gl.PopMatrix();
+            }
+
+            
             
             public void DrawMazeFloor(List<int> CellTypeList,float weight,Wektor Centrum)
             {
@@ -687,7 +874,9 @@ using System.Drawing;
                 
                 for(int i=0;i<CellTypeList.Count;i++)
                 {
+                 
                     CursorMoved = Cursor;
+                    drawQuadFloor(CursorMoved, weight);
                     x = i / InitialSize;
                     y = i % InitialSize;
                     CursorMoved.X = x*6*weight;
@@ -787,7 +976,178 @@ using System.Drawing;
                 //drawQuadFloor(new Wektor(Cursor.X, Cursor.Y, Cursor.Z + weight * 2 ), weight);
                 //drawQuadFloor(new Wektor(Cursor.X + weight * 2, Cursor.Y, Cursor.Z + weight * 2), weight);
                 Is_list_fill = true;
-                Debug.WriteLine(ListaPointowDoKolizji.Count);
+           //     Debug.WriteLine(ListaPointowDoKolizji.Count);
+
+            }
+            public void DrawMazeFloorL(List<int> CellTypeList, float weight, Wektor Centrum)
+            {
+                int x;
+                int y;
+                int InitialSize = (int)Math.Sqrt((double)CellTypeList.Count);
+                Wektor Cursor;
+                Cursor = Centrum;
+                // Cursor = new Wektor(Centrum.X - weight * 2 * InitialSize, Centrum.Y, Centrum.Z - weight * 2 * InitialSize);
+                Wektor CursorMoved;
+                CursorMoved = Cursor;
+
+                for (int i = 0; i < CellTypeList.Count; i++)
+                {
+
+                    CursorMoved = Cursor;
+                    drawQuadFloor(CursorMoved, weight);
+                    drawQuadFloorL(CursorMoved, weight);
+                    x = i / InitialSize;
+                    y = i % InitialSize;
+                    CursorMoved.X = x * 6 * weight;
+                    CursorMoved.Z = y * 6 * weight;
+                    Cursor.Y = 0.5f;
+
+                    switch (CellTypeList.ElementAt(i))
+                    {
+                        case 11111:
+                            drawQuadFloor(CursorMoved, weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z + 2 * weight), weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X + 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z - 2 * weight), weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X - 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            drawQuadFloorL(CursorMoved, weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z + 2 * weight), weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X + 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z - 2 * weight), weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X - 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+
+
+                            break;
+
+                        case 10111:
+                            drawQuadFloor(CursorMoved, weight);
+
+                            drawQuadFloor(new Wektor(CursorMoved.X + 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z - 2 * weight), weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X - 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            drawQuadFloorL(CursorMoved, weight);
+
+                            drawQuadFloorL(new Wektor(CursorMoved.X + 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z - 2 * weight), weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X - 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            break;
+                        case 11011:
+                            drawQuadFloor(CursorMoved, weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z + 2 * weight), weight);
+
+                            drawQuadFloor(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z - 2 * weight), weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X - 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                              drawQuadFloorL(CursorMoved, weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z + 2 * weight), weight);
+
+                            drawQuadFloorL(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z - 2 * weight), weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X - 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            break;
+                        case 11101:
+                            drawQuadFloor(CursorMoved, weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z + 2 * weight), weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X + 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X - 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            drawQuadFloorL(CursorMoved, weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z + 2 * weight), weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X + 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X - 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            break;
+                        case 11110:
+                            drawQuadFloor(CursorMoved, weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z + 2 * weight), weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X + 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z - 2 * weight), weight);
+                            drawQuadFloorL(CursorMoved, weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z + 2 * weight), weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X + 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z - 2 * weight), weight);
+                            break;
+                        case 10011:
+                            drawQuadFloor(CursorMoved, weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z - 2 * weight), weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X - 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            drawQuadFloorL(CursorMoved, weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z - 2 * weight), weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X - 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            break;
+                        case 11001:
+                            drawQuadFloor(CursorMoved, weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z + 2 * weight), weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X - 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            drawQuadFloorL(CursorMoved, weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z + 2 * weight), weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X - 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            break;
+                        case 11100:
+                            drawQuadFloor(CursorMoved, weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z + 2 * weight), weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X + 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            drawQuadFloorL(CursorMoved, weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z + 2 * weight), weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X + 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            break;
+                        case 11010:
+                            drawQuadFloor(CursorMoved, weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z + 2 * weight), weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z - 2 * weight), weight);
+                            drawQuadFloorL(CursorMoved, weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z + 2 * weight), weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z - 2 * weight), weight);
+                            break;
+                        case 10110:
+                            drawQuadFloor(CursorMoved, weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X + 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z - 2 * weight), weight);
+                            drawQuadFloorL(CursorMoved, weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X + 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z - 2 * weight), weight);
+                            
+                            break;
+                        case 10101:
+                            drawQuadFloor(CursorMoved, weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X + 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X - 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            drawQuadFloorL(CursorMoved, weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X + 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X - 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            break;
+                        case 11000:
+                            drawQuadFloor(CursorMoved, weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z + 2 * weight), weight);
+                            drawQuadFloorL(CursorMoved, weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z + 2 * weight), weight);
+                            break;
+                        case 10100:
+                            drawQuadFloor(CursorMoved, weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X + 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            drawQuadFloorL(CursorMoved, weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X + 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                            break;
+                        case 10010:
+                            drawQuadFloor(CursorMoved, weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z - 2 * weight), weight);
+                            drawQuadFloorL(CursorMoved, weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X, CursorMoved.Y, CursorMoved.Z - 2 * weight), weight);
+                            break;
+                        case 10001:
+                            drawQuadFloor(CursorMoved, weight);
+                            drawQuadFloor(new Wektor(CursorMoved.X - 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                              drawQuadFloorL(CursorMoved, weight);
+                            drawQuadFloorL(new Wektor(CursorMoved.X - 2 * weight, CursorMoved.Y, CursorMoved.Z), weight);
+                          
+                            break;
+                    }
+
+                    drawQuadFloor(CursorMoved, weight);
+                    drawQuadFloorL(CursorMoved, weight);
+
+                }
+
+                //drawQuadFloor(new Wektor(Cursor.X, Cursor.Y, Cursor.Z + weight * 2 ), weight);
+                //drawQuadFloor(new Wektor(Cursor.X + weight * 2, Cursor.Y, Cursor.Z + weight * 2), weight);
+                Is_list_fill = true;
+                //     Debug.WriteLine(ListaPointowDoKolizji.Count);
 
             }
         }

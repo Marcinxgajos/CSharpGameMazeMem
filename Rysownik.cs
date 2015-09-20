@@ -9,6 +9,10 @@ namespace GlSharpGame
     class Rysownik
     {
         public OpenGL gl;
+        public Rysownik()
+        {
+ 
+        }
         public Rysownik(OpenGL gll)
         {
             gl = gll;
